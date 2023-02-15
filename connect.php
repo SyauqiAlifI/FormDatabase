@@ -8,9 +8,22 @@
   // Check connection to the db
   $connect = new mysqli($db_host, $db_user, $db_pass, $db_name);
   if($connect->errno){
-    echo $connect->error;
+    echo '
+    <div id="status" class="p-3 bg-danger rounded-2">
+      <h4 class="text-white m-0">
+        Connection Failed :'+ $connect->error +'
+      </h4>
+    </div>
+    ';
     exit;
   } else {
-    echo 'Connection Succeed';
+    $str = '
+    <div id="status" class="p-3 bg-success rounded-2">
+      <h4 class="text-white m-0">
+        Connection Succeed
+      </h4>
+    </div>
+    ';
+    echo($str);
   };
 ?>

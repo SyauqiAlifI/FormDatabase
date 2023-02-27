@@ -32,32 +32,9 @@
   </script>
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     <div style="display: none;"><?php include 'connect.php';?></div>
     <?php
-      // Update function
-      if(isset($_POST['submit'])) {
-        $_id = $_POST['id'];
-        $_nik = $_POST['nik'];
-        $_nama = $_POST['nama'];
-        $_kelas = $_POST['kelas'];
-        $_jurusan = $_POST['jurusan'];
-        $_alamat = $_POST['alamat'];
-
-        // query to update data
-        $query = mysqli_query($connect, "UPDATE siswa SET nik = '$_nik', nama = '$_nama', kelas = '$_kelas', jurusan = '$_jurusan', alamat = '$_alamat' WHERE id = '$_id'");
-
-        if($query) {
-          echo '<script>
-            alert("Data updated successfully");
-            window.location = "/BackEndStudy/access/admin_page.php";
-          </script>';
-        } else {
-          echo '<script>
-            alert("Failed");
-          </script>';
-        }
-      }
 
       // Edit function
       $id = $_GET['id'];
@@ -69,11 +46,76 @@
       while($edit = mysqli_fetch_array($result)) {
         $nik = $edit['nik'];
         $nama = $edit['nama'];
+        $photo = $edit['photo'];
         $kelas = $edit['kelas'];
         $jurusan = $edit['jurusan'];
         $alamat = $edit['alamat'];
       }
+      
+      // Update function
+      if(isset($_POST['submit'])) {
+        $_id = $_POST['id'];
+        $_nik = $_POST['nik'];
+        $_nama = $_POST['nama'];
+        $_kelas = $_POST['kelas'];
+        $_jurusan = $_POST['jurusan'];
+        $_alamat = $_POST['alamat'];
 
+        // Contains format that is allowed to be uploaded
+        $format = ['png', 'jpg', 'jpeg', 'svg'];
+        // File request container
+        $filename = $_FILES['foto']['name'];
+        // File size request container
+        $filesize = $_FILES['foto']['size'];
+        // Only take the file format info
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+        if(empty($nik) || empty($name) || empty($kelas) || empty($jurusan) || empty($address)){
+          echo '
+            <div class="bg-warning rounded-2 my-3 pt-2 pb-2">
+              <p class="p text-center my-auto">
+                <b class="text-light">Input required fields!</b>
+              </p>
+            </div>
+          ';
+          // Jikalau data yang di input lebih dari 1 atau ada persamaan data di table database
+        } else {
+          // if the file format is not meet with the requirements from $format
+          if($filesize < 10044070) {
+            $_photo = $nik.'_'.$filename;
+
+            // save the updated photo file in this folder
+            move_uploaded_file($_FILES['foto']['tmp_name'], './post_images/'.$nik.'_'.$filename);
+            // save the updated photo FILENAME to the databse
+            $connect->query("UPDATE siswa SET nik = '$_nik', nama = '$_nama', photo = '$_photo', kelas = '$_kelas', jurusan = '$_jurusan', alamat = '$_alamat' WHERE id = '$_id'");
+
+            echo '
+              <script>
+                Swal.fire({
+                  icon: \'success\',
+                  title: \'Success!\',
+                  text: \'Data has been saved!\',
+                  showClass: {
+                    popup: \'animate__animated animate__fadeInDown\'
+                  },
+                  hideClass: {
+                    popup: \'animate__animated animate__fadeOutDown\'
+                  },
+                  confirmButtonColor: \'#3085d6\',
+                  confirmButtonText: \'Okay!\'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    window.location = "/BackEndStudy/access/admin_page.php";
+                  }
+                });
+              </script>
+              <!-- <script>alert("fiuh")</script> -->
+            ';
+          } else {
+            echo 'Failed';
+          }
+        }
+      }
 
     ?>
     <table width="25%">
@@ -84,6 +126,14 @@
       <tr>
         <td>Nama</td>
         <td><input type="text" name="nama" id="i-nama" value="<?php echo $nama; ?>"></td>
+      </tr>
+      <tr>
+        <td>Foto</td>
+        <td>
+          <img src="./post_images/<?php echo $photo; ?>" style="width: 128px; margin-bottom: 5px;">
+          <input type="file" name="foto" id="i-foto">
+          <p style="margin: 5px 0; color: red;">Leave it if u don't want to change it</p>
+        </td>
       </tr>
       <tr>
         <td>Kelas</td>

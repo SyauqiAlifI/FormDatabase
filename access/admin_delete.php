@@ -11,16 +11,15 @@
   <?php
     // call id parameter
     $id = $_GET['id'];
+    // photo parameter
+    $photo = $_GET['photo'];
     // Create a query to delete data based on id
     $result = mysqli_query($connect, "DELETE FROM siswa WHERE id = '$id'");
 
-    // Assign the query result as an array
-    $del_photo = mysqli_fetch_array($result);
-
     // if there's a photo then delete it from the folder
-    if(is_file("post_images/".$del_photo['photo'])) {
+    if(is_file("post_images/".$photo)) {
       // Delete the file
-      unlink("post_images/".$del_photo['photo']);
+      unlink("post_images/".$photo);
       // Delete the data
       mysqli_query($connect, "DELETE FROM siswa WHERE id = '$id'");
       echo '<script>

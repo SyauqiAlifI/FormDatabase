@@ -119,7 +119,7 @@
                         <td>'.$hasil['jurusan'].'</td>
                         <td>'.$hasil['alamat'].'</td>
                         <td>
-                          <a class="btn btn-success" href="admin_edit.php?id='.$hasil['id'].'">edit</a> <a class="btn btn-danger" href="admin_delete.php?id='.$hasil['id'].'">delete</a>
+                          <a class="btn btn-success" href="admin_edit.php?id='.$hasil['id'].'">edit</a> <a class="btn btn-danger" href="admin_delete.php?id='.$hasil['id'].'&&photo='.$hasil['photo'].'">delete</a>
                         </td>
                       </tr>
                       ';
@@ -133,7 +133,7 @@
                         <td>'.$hasil['jurusan'].'</td>
                         <td>'.$hasil['alamat'].'</td>
                         <td>
-                          <a class="btn btn-success" href="admin_edit.php?id='.$hasil['id'].'">edit</a> <a class="btn btn-danger" href="admin_delete.php?id='.$hasil['id'].'">delete</a>
+                          <a class="btn btn-success" href="admin_edit.php?id='.$hasil['id'].'">edit</a> <a class="btn btn-danger" href="admin_delete.php?id='.$hasil['id'].'&&photo='.$hasil['photo'].'">delete</a>
                         </td>
                       </tr>
                       ';
